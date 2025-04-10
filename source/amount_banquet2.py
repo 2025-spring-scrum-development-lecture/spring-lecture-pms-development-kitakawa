@@ -31,7 +31,8 @@ class Amount_page(tk.Frame):
         self.canvas = Canvas(self, height=500, width=850)
         self.canvas.place(x=25, y=90)
         self.inner_frame = tk.Frame(self.canvas)
-        
+
+        self.total = 0
         self.flg = False
         
         self.all_plan_amounts = [
@@ -85,10 +86,10 @@ class Amount_page(tk.Frame):
         self.date_label_two = tk.Label(self.canvas, text=self.date, font=("", 13))
         self.date_label_two.place(x=200, y=90)
         # 部屋種類
-        self.date_label = tk.Label(self.canvas, text="部屋種類", font=("", 13))
-        self.date_label.place(x=50, y=120)
-        self.date_label_two = tk.Label(self.canvas, text=self.room, font=("", 13))
-        self.date_label_two.place(x=200, y=120)
+        self.room_label = tk.Label(self.canvas, text="部屋種類", font=("", 13))
+        self.room_label.place(x=50, y=120)
+        self.room_name = tk.Label(self.canvas, text=self.room, font=("", 13))
+        self.room_name.place(x=200, y=120)
         # 泊数
         self.day_label = tk.Label(self.canvas, text="泊数", font=("", 13))
         self.day_label.place(x=50, y=150)
@@ -114,7 +115,7 @@ class Amount_page(tk.Frame):
         self.big_people_label.place(x=245, y=180)
         self.small_people = tk.Label(self.canvas, text="子供", font=("", 12))
         self.small_people.place(x=50, y=210)
-        self.small_people_entry = tk.Entry(self.canvas, font=("", 13), width=6)
+        self.small_people_entry = tk.Entry(self.canvas, text=self.child, font=("", 13), width=6)
         self.small_people_entry.insert(tk.END, self.child)
         self.small_people_entry.place(x=200, y=210)
         self.small_people_label = tk.Label(self.canvas, text="名", font=("", 13))
@@ -324,14 +325,33 @@ class Amount_page(tk.Frame):
             messagebox.showwarning("エラー", "名前とメールを入力してください。")
         else:
             # メール送信
-            to = ""
-            subject = "a"
-            body = "aaaaa"
+            to = self.mail_entry.get()
+            subject = "【〇〇ホテル】ご予約内容のお知らせ"
+            body = f"""
+                    <html>
+                    <head></head>
+                    <body>
+                    <h3>{self.name_entry.get()}様</h3>
+                    <h4>この度は、〇〇ホテルをご予約いただき、誠にありがとうございます。<br>
+                    以下の内容でご予約を承りました。</h4>
+                    <ul>
+                        <li>プラン: {self.plan_name}</li>
+                        <li>部屋タイプ: {self.room}</li>
+                        <li>チェックイン日: {self.date}</li>
+                        <li>大人: {self.big_people_entry.get()}名</li>
+                        <li>子供: {self.big_people_entry.get()}名</li>
+                    </ul>
+                    <h4>合計金額：{self.sum_amount}円</h4>
+                    <h4>ご到着を心よりお待ちしております。</h4>
+                    <p>〇〇ホテル</p>
+                    </body>
+                    </html>
+                    """
             self.send_mail(to, subject, body)
             
     def send_mail(self, to, subject, body):
         # 後で変更
-        ID = ''
+        ID = to
         PASS = os.environ['MAIL_PASS']
         HOST = 'smtp.gmail.com'
         PORT = 587
@@ -357,6 +377,6 @@ class Amount_page(tk.Frame):
             
 if __name__ == '__main__':
     root = tk.Tk()
-    app = Amount_page(root, "2【イースター復活祭】×【女子旅】お部屋にはチョコレートたまご型お菓子などたくさん♪まったりしてねプラン(*´ω｀)", "岩手山展望露天風呂付き和室", 2, 1, "2025-01-01")
+    app = Amount_page(root, "2【イースター復活祭】×【女子旅】お部屋にはチョコレートたまご型お菓子などたくさん♪まったりしてねプラン(*´ω｀)", "岩手山展望露天風呂付き和室", 2, 0, "2025-01-01")
     app.pack()
     root.mainloop()
