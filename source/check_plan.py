@@ -26,31 +26,32 @@ class Check_page(tk.Frame):
         self.create_widgets()
         
     def create_widgets(self):
-        redimg = Image.open("red.png") # リサイズしたいアイコンのファイル名
+        self.child_num = 0
+        redimg = Image.open("../img/red.png") # リサイズしたいアイコンのファイル名
         red_width = 10  # 希望の幅 (ピクセル)
         red_height = 10 # 希望の高さ (ピクセル)
         resized_red = redimg.resize((red_width, red_height))
         self.red_icon_resized = ImageTk.PhotoImage(resized_red)
         
-        blueimg = Image.open("blue.png") # リサイズしたいアイコンのファイル名
+        blueimg = Image.open("../img/blue.png") # リサイズしたいアイコンのファイル名
         blue_width = 10  # 希望の幅 (ピクセル)
         blue_height = 10 # 希望の高さ (ピクセル)
         resized_blue = blueimg.resize((blue_width, blue_height))
         self.blue_icon_resized = ImageTk.PhotoImage(resized_blue)
         
-        doorimg = Image.open("door.png") # リサイズしたいアイコンのファイル名
+        doorimg = Image.open("../img/door.png") # リサイズしたいアイコンのファイル名
         door_width = 30  # 希望の幅 (ピクセル)
         door_height = 30 # 希望の高さ (ピクセル)
         resized_door = doorimg.resize((door_width, door_height))
         self.door_icon_resized = ImageTk.PhotoImage(resized_door)
         
-        calimg = Image.open("cal.png") # リサイズしたいアイコンのファイル名
+        calimg = Image.open("../img/cal.png") # リサイズしたいアイコンのファイル名
         cal_width = 30  # 希望の幅 (ピクセル)
         cal_height = 30 # 希望の高さ (ピクセル)
         resized_cal = calimg.resize((cal_width, cal_height))
         self.cal_icon_resized = ImageTk.PhotoImage(resized_cal)
         
-        hitoimg = Image.open("hito2.png") # リサイズしたいアイコンのファイル名
+        hitoimg = Image.open("../img/hito2.png") # リサイズしたいアイコンのファイル名
         hito_width = 30  # 希望の幅 (ピクセル)
         hito_height = 30 # 希望の高さ (ピクセル)
         resized_hito = hitoimg.resize((hito_width, hito_height))
@@ -131,15 +132,16 @@ class Check_page(tk.Frame):
         from amount_banquet2 import Amount_page
         room = self.combo.get()
         adult = self.adEntry.get()
-        child = self.chEntry.get()
+        self.child_num = self.chEntry.get()
         day = self.daEntry.get()
+        print(self.child_num)
         if not adult:
             messagebox.showerror("エラー", "大人の人数を選択してください。")
         elif not day:
             messagebox.showerror("エラー", "日付を選択してください。")
         else:
             self.destroy()
-            Amount_page(self.master, self.hotelplan, room, adult, child, day)
+            Amount_page(self.master, self.hotelplan, room, adult, self.child_num, day)
         
 if __name__ == '__main__':
     root = tk.Tk()
