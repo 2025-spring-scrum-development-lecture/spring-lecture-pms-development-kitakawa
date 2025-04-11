@@ -7,7 +7,7 @@ from smtplib import SMTP
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from tkinter import messagebox
-
+import json
 
 class Amount_page(tk.Frame):
     def __init__(self, master, plan_name, room, adult, child, day):
@@ -115,7 +115,7 @@ class Amount_page(tk.Frame):
         self.big_people_label.place(x=245, y=180)
         self.small_people = tk.Label(self.canvas, text="子供", font=("", 12))
         self.small_people.place(x=50, y=210)
-        self.small_people_entry = tk.Entry(self.canvas, text=self.child, font=("", 13), width=6)
+        self.small_people_entry = tk.Entry(self.canvas, font=("", 13), width=6)
         self.small_people_entry.insert(tk.END, self.child)
         self.small_people_entry.place(x=200, y=210)
         self.small_people_label = tk.Label(self.canvas, text="名", font=("", 13))
@@ -134,13 +134,13 @@ class Amount_page(tk.Frame):
         # self.tel_entry = tk.Entry(self.canvas, font=("", 13), width=20)
         # self.tel_entry.place(x=200, y=330)
         
-        self.button = tk.Button(text="金額表示", command=self.amount_button, width=13, height=2, font=("", 12))
+        self.button = tk.Button(self, text="金額表示", command=self.amount_button, width=13, height=2, font=("", 12))
         self.button.place(x=285, y=460)
   
-        self.new_post_button = tk.Button(text='オプション選択', font=("", 12), command=self.option_window, width=12, height=2)
+        self.new_post_button = tk.Button(self, text='オプション選択', font=("", 12), command=self.option_window, width=12, height=2)
         self.new_post_button.place(x=70, y=460)
         
-        self.home_back = tk.Button(text="< ホームへ戻る", command=self.home_back_click, font=("", 10), width=11, height=1, relief="flat")
+        self.home_back = tk.Button(self, text="< ホームへ戻る", command=self.home_back_click, font=("", 10), width=11, height=1, relief="flat")
         self.home_back.place(x=20, y=20)
         
     def home_back_click(self):
@@ -183,6 +183,12 @@ class Amount_page(tk.Frame):
             combo.place(x=x_margin + 260, y=y)  # 少し右にずらす
             self.addmeal_combos.append((combo, price))
             y += 25
+            
+        self.drink_label = tk.Label(self.option_newwindow, text="2時間飲み放題プラン (2000円)", font=(label_font)).place(x=20, y=300)
+        self.drink_combo = ttk.Combobox(self.option_newwindow, values=[str(i) for i in range(10)], width=4, font=("", 11))
+        self.drink_combo.set("0")
+        self.drink_combo.place(x=x_margin + 260, y=300)
+        
         # ---- 右カラム：ペット ----
         x_right = 400  # 右カラムの文字の間隔を狭める
         y = y_margin
@@ -254,6 +260,7 @@ class Amount_page(tk.Frame):
             self.total += int(combo.get()) * price
         for combo, price in self.rockbath_combos:
             self.total += int(combo.get()) * price
+        self.total += int(self.drink_combo.get()) *2000
         self.total_label.config(text=f"合計金額: {self.total}円")
         
     
@@ -348,6 +355,17 @@ class Amount_page(tk.Frame):
                     </html>
                     """
             self.send_mail(to, subject, body)
+        name = self.name_entry.get()
+        email = self.mail_entry.get()
+        data = {
+            "お名前": name,
+            "メールアドレス": email,
+            "選択プラン": self.plan_name,
+            "料金": self.sum_amount
+        }
+        with open("user_info.json", "a", encoding="utf-8") as f:    #aは追記モード
+            json.dump(data, f, indent=4, ensure_ascii=False)
+            f.write('\n') # JSONオブジェクトを改行で区切る (読み込みやすくするため)
             
     def send_mail(self, to, subject, body):
         # 後で変更
