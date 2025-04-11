@@ -133,8 +133,10 @@ class Check_page(tk.Frame):
         room = self.combo.get()
         adult = self.adEntry.get()
         self.child_num = self.chEntry.get()
+        if self.child_num == "":
+           self.child_num = 0
+             
         day = self.daEntry.get()
-        print(self.child_num)
         if not adult:
             messagebox.showerror("エラー", "大人の人数を選択してください。")
         elif not day:
