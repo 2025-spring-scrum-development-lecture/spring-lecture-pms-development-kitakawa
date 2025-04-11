@@ -32,13 +32,13 @@ class Application(tk.Frame):
     def select_accommodation(self):        
         from hotel_plan import stayplan_page
         self.destroy()
-        stayplan_page(root)
+        stayplan_page(self.master)
         
     def select_banquet(self):
         pass
         from banquet_plan import Application
         self.destroy()
-        Application(root)
+        Application(self.master)
         
 if __name__ == '__main__':
     root = tk.Tk()

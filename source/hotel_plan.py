@@ -105,12 +105,16 @@ class stayplan_page(tk.Frame):
             
     # 次ページへの遷移（プラン名を引き渡し）
     def next_page(self):
-        if self.plan_listbox.selection_get():
+        try:
             plan_name = self.plan_listbox.selection_get()
             from check_plan import Check_page
             self.destroy()
             Check_page(self.master, plan_name)
-         
+        except tk.TclError:
+            messagebox.showwarning("選択エラー", "プランを選択してください。")
+    
+
+      
 if __name__ == '__main__':
     root = tk.Tk()
     app = stayplan_page(root)
