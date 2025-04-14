@@ -132,8 +132,8 @@ class Amount_page(tk.Frame):
         # self.tel_label = tk.Label(self.canvas, text="電話番号", font=("", 13))
         # self.tel_label.place(x=50, y=330)
         # self.tel_entry = tk.Entry(self.canvas, font=("", 13), width=20)
-        # self.tel_entry.place(x=200, y=330)
-        
+        # self.tel_entry.place(x=200, y=330)        
+
         self.button = tk.Button(self, text="金額表示", command=self.amount_button, width=13, height=2, font=("", 12))
         self.button.place(x=285, y=460)
   
@@ -141,6 +141,7 @@ class Amount_page(tk.Frame):
         self.new_post_button.place(x=70, y=460)
         
         self.home_back = tk.Button(self, text="< ホームへ戻る", command=self.home_back_click, font=("", 10), width=11, height=1, relief="flat")
+
         self.home_back.place(x=20, y=20)
         
     def home_back_click(self):
@@ -183,7 +184,7 @@ class Amount_page(tk.Frame):
             combo.place(x=x_margin + 260, y=y)  # 少し右にずらす
             self.addmeal_combos.append((combo, price))
             y += 25
-            
+
         self.drink_label = tk.Label(self.option_newwindow, text="2時間飲み放題プラン (2000円)", font=(label_font)).place(x=20, y=300)
         self.drink_combo = ttk.Combobox(self.option_newwindow, values=[str(i) for i in range(10)], width=4, font=("", 11))
         self.drink_combo.set("0")
@@ -260,6 +261,7 @@ class Amount_page(tk.Frame):
             self.total += int(combo.get()) * price
         for combo, price in self.rockbath_combos:
             self.total += int(combo.get()) * price
+
         self.total += int(self.drink_combo.get()) *2000
         self.total_label.config(text=f"合計金額: {self.total}円")
         
@@ -329,6 +331,13 @@ class Amount_page(tk.Frame):
         self.flg = True
     
     def final_click(self):
+        name = self.name_entry.get()
+        email = self.mail_entry.get()
+        data = {
+            "name": name,
+            "email": email
+        }
+        filepath = "user_info.json"
         if self.name_entry.get() == "" or self.mail_entry.get() == "":
             messagebox.showwarning("エラー", "名前とメールを入力してください。")
         else:
@@ -355,6 +364,45 @@ class Amount_page(tk.Frame):
                     </body>
                     </html>
                     """
+            self.send_mail(to, subject, body)         
+        if os.path.exists(filepath):
+            with open(filepath, "r", encoding="utf-8") as f:
+                        content = f.read()
+                        if content:
+                            user_data_list = json.loads(content)
+                            
+        user_data_list.append(data)
+        
+        with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(user_data_list, f, indent=4, ensure_ascii=False)
+        reserved_date = self.date
+        reserved_dates_file = "reserved_dates.json"
+        existing_dates = []
+
+        if os.path.exists(reserved_dates_file):
+            try:
+                with open(reserved_dates_file, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    if content:
+                        # JSON をロードする際に、それがリストであることを期待する
+                        try:
+                            existing_dates = json.loads(content)
+                            if not isinstance(existing_dates, list):
+                                existing_dates = [] # リストでなければ初期化
+                        except json.JSONDecodeError:
+                            existing_dates = [] # パースに失敗したら初期化
+            except FileNotFoundError:
+                pass
+
+        if reserved_date not in existing_dates:
+            existing_dates.append(reserved_date)
+
+        try:
+            with open(reserved_dates_file, "w", encoding="utf-8") as f:
+                json.dump(existing_dates, f, indent=4)
+        except IOError:
+            messagebox.showerror("エラー", f"{reserved_dates_file} への書き込みに失敗しました。")
+
             self.send_mail(to, subject, body)
         name = self.name_entry.get()
         email = self.mail_entry.get()
@@ -367,6 +415,7 @@ class Amount_page(tk.Frame):
         with open("user_info.json", "a", encoding="utf-8") as f:    #aは追記モード
             json.dump(data, f, indent=4, ensure_ascii=False)
             f.write('\n') # JSONオブジェクトを改行で区切る (読み込みやすくするため)
+
             
     def send_mail(self, to, subject, body):
         # 後で変更
