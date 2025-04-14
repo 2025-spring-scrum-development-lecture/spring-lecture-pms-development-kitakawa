@@ -45,6 +45,7 @@ class Check_page(tk.Frame):
                 return []
         return []
     def create_widgets(self):
+        self.child_num = 0
         redimg = Image.open("../img/red.png") # リサイズしたいアイコンのファイル名
         red_width = 10  # 希望の幅 (ピクセル)
         red_height = 10 # 希望の高さ (ピクセル)
@@ -167,7 +168,10 @@ class Check_page(tk.Frame):
         from amount_banquet2 import Amount_page
         room = self.combo.get()
         adult = self.adEntry.get()
-        child = self.chEntry.get()
+        self.child_num = self.chEntry.get()
+        if self.child_num == "":
+           self.child_num = 0
+             
         day = self.daEntry.get()
         if not adult:
             messagebox.showerror("エラー", "大人の人数を選択してください。")
@@ -175,7 +179,7 @@ class Check_page(tk.Frame):
             messagebox.showerror("エラー", "日付を選択してください。")
         else:
             self.destroy()
-            Amount_page(self.master, self.hotelplan, room, adult, child, day)
+            Amount_page(self.master, self.hotelplan, room, adult, self.child_num, day)
         
 if __name__ == '__main__':
     root = tk.Tk()
