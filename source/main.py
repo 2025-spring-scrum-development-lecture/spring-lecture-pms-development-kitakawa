@@ -21,7 +21,7 @@ class Application(tk.Frame):
                                            width=200, height=190, command=self.select_accommodation)
         self.btn_accommodation.place(x=200, y=200)
         # 宴会ボタン（画像付き）
-        blueimg = Image.open("../img/enkai.png")
+        blueimg = Image.open("../img/enkai1.png")
         resized_blue = blueimg.resize((100, 100))
         self.blue_icon_resized = ImageTk.PhotoImage(resized_blue)
         self.btn_banquet = tk.Button(self, text="宴会", image=self.blue_icon_resized,
