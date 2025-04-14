@@ -11,15 +11,15 @@ class Application(tk.Frame):
         self.create_widgets()
         
     def create_widgets(self):
-        self.label = tk.Label(text="宴会プラン選択", font=("", 16))
+        self.label = tk.Label(text="宴会プラン選択", font=("", 17))
         self.label.place(x=150, y=100)
-        self.course_one = tk.Button(self, text="豪華コース", font=("", 15), command=self.next_one, bg="white", relief="groove")
+        self.course_one = tk.Button(self, text="豪華コース", font=("", 16), command=self.next_one, bg="light blue", relief="groove")
         self.course_one.place(x=200, y=150, width=250, height=150)
-        self.course_two = tk.Button(self, text="雅(みやび)コース", font=("", 15), command=self.next_two, bg="white", relief="groove")
+        self.course_two = tk.Button(self, text="雅(みやび)コース", font=("", 16), command=self.next_two, bg="light blue", relief="groove")
         self.course_two.place(x=460, y=150, width=250, height=150)
-        self.course_three = tk.Button(self, text="錦(にしき)コース", font=("", 15), command=self.next_three, bg="white", relief="groove")
+        self.course_three = tk.Button(self, text="錦(にしき)コース", font=("", 16), command=self.next_three, bg="light blue", relief="groove")
         self.course_three.place(x=200, y=320, width=250, height=150)
-        self.course_four = tk.Button(self, text="椿(つばき)コース", font=("", 15), command=self.next_four, bg="white", relief="groove")
+        self.course_four = tk.Button(self, text="椿(つばき)コース", font=("", 16), command=self.next_four, bg="light blue", relief="groove")
         self.course_four.place(x=460, y=320, width=250, height=150)
         
     def next_one(self):
