@@ -328,7 +328,6 @@ class Amount_page(tk.Frame):
             "email": email
         }
         filepath = "user_info.json"
-        user_data_list = []
         if self.name_entry.get() == "" or self.mail_entry.get() == "":
             messagebox.showwarning("エラー", "名前とメールを入力してください。")
         else:
@@ -355,7 +354,7 @@ class Amount_page(tk.Frame):
                     </body>
                     </html>
                     """
-            self.send_mail(to, subject, body)
+            self.send_mail(to, subject, body)         
         if os.path.exists(filepath):
             with open(filepath, "r", encoding="utf-8") as f:
                         content = f.read()
@@ -366,6 +365,34 @@ class Amount_page(tk.Frame):
         
         with open(filepath, "w", encoding="utf-8") as f:
                 json.dump(user_data_list, f, indent=4, ensure_ascii=False)
+        reserved_date = self.date
+        reserved_dates_file = "reserved_dates.json"
+        existing_dates = []
+
+        if os.path.exists(reserved_dates_file):
+            try:
+                with open(reserved_dates_file, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    if content:
+                        # JSON をロードする際に、それがリストであることを期待する
+                        try:
+                            existing_dates = json.loads(content)
+                            if not isinstance(existing_dates, list):
+                                existing_dates = [] # リストでなければ初期化
+                        except json.JSONDecodeError:
+                            existing_dates = [] # パースに失敗したら初期化
+            except FileNotFoundError:
+                pass
+
+        if reserved_date not in existing_dates:
+            existing_dates.append(reserved_date)
+
+        try:
+            with open(reserved_dates_file, "w", encoding="utf-8") as f:
+                json.dump(existing_dates, f, indent=4)
+        except IOError:
+            messagebox.showerror("エラー", f"{reserved_dates_file} への書き込みに失敗しました。")
+
             
     def send_mail(self, to, subject, body):
         # 後で変更
