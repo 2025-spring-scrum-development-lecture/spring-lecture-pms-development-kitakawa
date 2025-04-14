@@ -45,31 +45,31 @@ class Check_page(tk.Frame):
                 return []
         return []
     def create_widgets(self):
-        redimg = Image.open("img/red.png") # リサイズしたいアイコンのファイル名
+        redimg = Image.open("../img/red.png") # リサイズしたいアイコンのファイル名
         red_width = 10  # 希望の幅 (ピクセル)
         red_height = 10 # 希望の高さ (ピクセル)
         resized_red = redimg.resize((red_width, red_height))
         self.red_icon_resized = ImageTk.PhotoImage(resized_red)
         
-        blueimg = Image.open("img/blue.png") # リサイズしたいアイコンのファイル名
+        blueimg = Image.open("../img/blue.png") # リサイズしたいアイコンのファイル名
         blue_width = 10  # 希望の幅 (ピクセル)
         blue_height = 10 # 希望の高さ (ピクセル)
         resized_blue = blueimg.resize((blue_width, blue_height))
         self.blue_icon_resized = ImageTk.PhotoImage(resized_blue)
         
-        doorimg = Image.open("img/door.png") # リサイズしたいアイコンのファイル名
+        doorimg = Image.open("../img/door.png") # リサイズしたいアイコンのファイル名
         door_width = 30  # 希望の幅 (ピクセル)
         door_height = 30 # 希望の高さ (ピクセル)
         resized_door = doorimg.resize((door_width, door_height))
         self.door_icon_resized = ImageTk.PhotoImage(resized_door)
         
-        calimg = Image.open("img/cal.png") # リサイズしたいアイコンのファイル名
+        calimg = Image.open("../img/cal.png") # リサイズしたいアイコンのファイル名
         cal_width = 30  # 希望の幅 (ピクセル)
         cal_height = 30 # 希望の高さ (ピクセル)
         resized_cal = calimg.resize((cal_width, cal_height))
         self.cal_icon_resized = ImageTk.PhotoImage(resized_cal)
         
-        hitoimg = Image.open("img/hito2.png") # リサイズしたいアイコンのファイル名
+        hitoimg = Image.open("../img/hito2.png") # リサイズしたいアイコンのファイル名
         hito_width = 30  # 希望の幅 (ピクセル)
         hito_height = 30 # 希望の高さ (ピクセル)
         resized_hito = hitoimg.resize((hito_width, hito_height))
