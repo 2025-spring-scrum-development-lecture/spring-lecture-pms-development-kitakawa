@@ -272,6 +272,7 @@ class Amount_page(tk.Frame):
             self.final_amount.place_forget()
             self.sum_once.place_forget()
             self.sum_once_num2.place_forget()
+            self.sum_once_num.place_forget()
             
             
         self.sum_amount = 0
