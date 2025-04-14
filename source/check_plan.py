@@ -19,13 +19,31 @@ class Check_page(tk.Frame):
         start_date = datetime(2025, 1, 1)
         end_date = datetime(2030, 12, 31)
         self.availability = {}
+        self.reserved = {} # 予約済みの日付を管理する辞書
         
         current_date = start_date
         while current_date <= end_date:
             self.availability[current_date.strftime('%Y-%m-%d')] = '○'
             current_date += timedelta(days=1)
+        self.load_reserved_dates_into_dict() # 予約済みの日付を辞書に読み込む
         self.create_widgets()
         
+    def load_reserved_dates_into_dict(self):
+        reserved_dates = self.load_reserved_dates()
+        for date_str in reserved_dates:
+            self.reserved[date_str] = '×'
+    def load_reserved_dates(self):
+        reserved_dates_file = "reserved_dates.json"
+        if os.path.exists(reserved_dates_file):
+            try:
+                with open(reserved_dates_file, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except FileNotFoundError:
+                return []
+            except json.JSONDecodeError:
+                messagebox.showerror("エラー", f"{reserved_dates_file} の形式が不正です。")
+                return []
+        return []
     def create_widgets(self):
         redimg = Image.open("img/red.png") # リサイズしたいアイコンのファイル名
         red_width = 10  # 希望の幅 (ピクセル)
@@ -110,13 +128,30 @@ class Check_page(tk.Frame):
         self.back.place(x=60, y=490, width=100, height=35)
         self.enter = tk.Button(self, text='料金計算へ', command=self.enter_crick, fg="white", bg="#576FC5", font=("", 12))
         self.enter.place(x=477, y=490, width=120, height=35)
+        self.cal = tkc.Calendar(self, selectmode = 'day', year = 2025, font = "Arial 15", date_pattern='yyyy-mm-dd')
+        self.cal.bind("<<CalendarSelected>>", self.update_date_entry)
+        self.cal.tag_config('availability', background='light blue', foreground='black')
+        self.cal.tag_config('reserved', background='red') # 予約済みのタグを設定
+        self.cal.place(x=480, y=120)
+
+        self.mark_availability()
         
         self.mark_availability()
         
     def mark_availability(self):
         for date_str, status in self.availability.items():
-            date = datetime.strptime(date_str, '%Y-%m-%d').date()
-            self.cal.calevent_create(date, status, 'availability')
+            try:
+                date = datetime.strptime(date_str, '%Y-%m-%d').date()
+                self.cal.calevent_create(date, status, 'availability')
+            except ValueError:
+                print(f"不正な日付形式 (availability): {date_str}")
+
+        for date_str, status in self.reserved.items():
+            try:
+                date = datetime.strptime(date_str, '%Y-%m-%d').date()
+                self.cal.calevent_create(date, status, 'reserved')
+            except ValueError:
+                print(f"不正な日付形式 (reserved): {date_str}")
                 
     def update_date_entry(self, event):
         selected_date = self.cal.get_date()
@@ -147,4 +182,3 @@ if __name__ == '__main__':
     # 単独実行時のテスト用として、何らかのプラン名を渡す
     app = Check_page(master=root, plan="29【8/13～8/15】2025お盆期間限定♪お子様歓迎！スイカ割り・森のスタンプラリー・ミニ縁日や夜のイベントなどお楽しみ盛りだくさん")
     app.mainloop()
-    
