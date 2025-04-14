@@ -327,6 +327,8 @@ class Amount_page(tk.Frame):
             "name": name,
             "email": email
         }
+        filepath = "user_info.json"
+        user_data_list = []
         if self.name_entry.get() == "" or self.mail_entry.get() == "":
             messagebox.showwarning("エラー", "名前とメールを入力してください。")
         else:
@@ -354,9 +356,16 @@ class Amount_page(tk.Frame):
                     </html>
                     """
             self.send_mail(to, subject, body)
-        with open("user_info.json", "a", encoding="utf-8") as f:    #aは追記モード
-            json.dump(data, f, indent=4, ensure_ascii=False)
-            f.write('\n') # JSONオブジェクトを改行で区切る (読み込みやすくするため)
+        if os.path.exists(filepath):
+            with open(filepath, "r", encoding="utf-8") as f:
+                        content = f.read()
+                        if content:
+                            user_data_list = json.loads(content)
+                            
+        user_data_list.append(data)
+        
+        with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(user_data_list, f, indent=4, ensure_ascii=False)
             
     def send_mail(self, to, subject, body):
         # 後で変更
